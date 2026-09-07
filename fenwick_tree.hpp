@@ -35,11 +35,13 @@ class FenwickTreeSum : public FenwickTree<T> {
                 update(i, array[i]);
         }
 
-        void update(const size_t index, const T delta) override {
+        void update(const size_t index, const T new_value) override {
             if (index >= this->size)
                 throw std::out_of_range("index out of range");
 
             size_t eff_index = index+1;
+            T delta = new_value - this->tree[eff_index];
+
             while (eff_index <= this->size) {
                 this->tree[eff_index] += delta;
                 eff_index += (eff_index & -eff_index);
