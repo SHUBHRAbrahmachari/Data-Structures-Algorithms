@@ -1,0 +1,4 @@
+/*
+    Given an array of positive integers and also a positive integer K.
+    Return all of the subarrays whose sum is divisible by K
+*/
