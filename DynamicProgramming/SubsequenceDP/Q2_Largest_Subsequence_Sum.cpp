@@ -23,31 +23,24 @@ long long solve(const std::vector<long long>& arr) {
     /*
         DP idea:
 
-        memory[i] = maximum sum of a subsequence that ends at index i.
-        At each index, we either:
-        - extend the previous subsequence, or
-        - start a fresh subsequence from arr[i]
-
-        This is why we take the maximum of:
-            max_sum + arr[i]
-            arr[i]
+        max_sum stores the best subsequence sum found so far. For each element,
+        curr_sum either starts a new subsequence at that element or extends the
+        best subsequence found so far. No array is needed because only the
+        running best sum is used by the next iteration.
     */
-    std::vector<long long> memory(size);
-
-    // max_sum keeps track of the best answer seen so far.
     long long max_sum = std::numeric_limits<long long>::min()/2;
 
-    for (int i=0; i<size; i++) {
-        // Decide whether to continue the previous best subsequence or start over at i.
-        memory[i] = std::max(
-            max_sum + arr[i],
-            arr[i]
+    for (long long ele : arr) {
+        // Start at ele or extend the best subsequence found so far.
+        long long curr_sum = std::max(
+            ele,
+            ele + max_sum
         );
 
-        // Update the global best answer after considering the current index.
+        // Keep the best subsequence sum, including the option to skip ele.
         max_sum = std::max(
             max_sum,
-            memory[i]
+            curr_sum
         );
     }
 
