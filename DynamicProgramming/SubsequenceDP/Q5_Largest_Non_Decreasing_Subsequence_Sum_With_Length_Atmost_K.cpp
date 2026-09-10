@@ -37,7 +37,7 @@ std::vector<long long> get_cc_array(const std::vector<long long>& arr) {
     return cc_array;
 }
 
-int find_rank(const std::vector<long long>& cc_array, const int target) {
+int find_rank(const std::vector<long long>& cc_array, const long long target) {
     int left = 0;
     int right = cc_array.size()-1;
 
