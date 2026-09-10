@@ -258,7 +258,7 @@ class SegmentTreeMax : public SegmentTree<T> {
             this->delta_(index, delta_value, 0, this->size-1);
         }
 
-        T query(const size_t left_index, const size_t right_index) {
+        T query(const size_t left_index, const size_t right_index) override {
             if (left_index >= this->size or right_index >= this->size)
                 throw std::out_of_range("index out of range");
 
