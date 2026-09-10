@@ -10,9 +10,9 @@ class SegmentTree {
 
     public:
 
-        SegmentTree(const size_t size) {
+        SegmentTree(const size_t size, const T value) {
             this->size = size;
-            this->tree.assign(this->size*4, 0);
+            this->tree.assign(this->size*4, value);
         }
 
         SegmentTree(const std::vector<T>& array) {
@@ -110,7 +110,7 @@ class SegmentTreeSum : public SegmentTree<T> {
 
     public:
 
-        SegmentTreeSum(const size_t size) : SegmentTree<T>(size) {}
+        SegmentTreeSum(const size_t size, const T value) : SegmentTree<T>(size, value) {}
 
         SegmentTreeSum(const std::vector<T>& array) : SegmentTree<T>(array) {
             this->build_(array, 0, this->size-1);
@@ -238,7 +238,7 @@ class SegmentTreeMax : public SegmentTree<T> {
 
     public:
 
-        SegmentTreeMax(const size_t size) : SegmentTree<T>(size) {}
+        SegmentTreeMax(const size_t size, const T value) : SegmentTree<T>(size, value) {}
 
         SegmentTreeMax(const std::vector<T>& array) : SegmentTree<T>(array) {
             this->build_(array, 0, this->size-1);
@@ -358,7 +358,7 @@ class SegmentTreeMin : public SegmentTree<T> {
 
     public:
 
-        SegmentTreeMin(const size_t size) : SegmentTree<T>(size) {}
+        SegmentTreeMin(const size_t size, const T value) : SegmentTree<T>(size, value) {}
 
         SegmentTreeMin(const std::vector<T>& array) : SegmentTree<T>(array) {
             this->build_(array, 0, this->size-1);
