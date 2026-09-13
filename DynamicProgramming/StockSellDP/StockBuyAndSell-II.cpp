@@ -8,7 +8,7 @@
     > you can only sell a stock when you already hold a stock
     > you can make atmost 1 transaction
 
-    Another condition is that, you cannot buy the right next day of buying the stock.
+    Another condition is that, you cannot sell the right next day of buying the stock.
 
     What is the maximum profit you can earn?
 
