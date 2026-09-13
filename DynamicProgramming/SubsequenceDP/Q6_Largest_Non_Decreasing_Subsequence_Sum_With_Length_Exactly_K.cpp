@@ -103,13 +103,12 @@ long long solve(const std::vector<long long>& arr, const size_t k) {
             memory[l-1] still describes subsequences formed before `ele`.
         */
         for (size_t l=k; l>=1; l--) {
-            if (l == 1) {
-                /*
-                    Every element by itself is a valid subsequence of length 1.
-                    It ends at this element's rank and has sum equal to `ele`.
-                */
+            /*
+                Every element by itself is a valid subsequence of length 1.
+                It ends at this element's rank and has sum equal to `ele`.
+            */
+            if (l == 1)
                 memory[l].update(rank, ele);
-            }
 
             else {
                 /*
@@ -124,6 +123,7 @@ long long solve(const std::vector<long long>& arr, const size_t k) {
                 */
                 const long long prev_sum = memory[l-1].query(0, rank);
 
+                // any valid subsequence sum already exists, so we can proceed.
                 if (prev_sum != MIN) {
                     /*
                         Keep the better of the old state and the state obtained
