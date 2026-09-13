@@ -23,11 +23,38 @@
 
 long long solve(const std::vector<int>& prices, const int fee) {
     /*
-        We'll maintain two running varibales here:
+        We use two dynamic-programming states while scanning the prices from
+        left to right. Each state represents the best result after processing
+        all days seen so far.
 
-        1> max_net_profit: maximum possible net profit at the end of day any day with as many as possible completed transactions
-        2> max_net_worth: maximum possible net worth at the end of any day with as many as possible completed transactions
-    */   
+        1. max_net_profit:
+           The maximum cash available when we do not currently hold a stock.
+           Any number of complete buy/sell transactions may already have been
+           performed. This is also the state returned as the final answer.
+
+        2. max_net_worth:
+           The maximum cash remaining after buying and currently holding one
+           stock. Buying changes cash into cash - price, so this value can be
+           negative. MIN means that no valid holding state exists yet.
+
+        For a current price p, the transitions are:
+
+            hold = max(previous_hold, previous_profit - p)
+            profit = max(previous_profit, previous_hold + p - fee)
+
+        The first transition means either keep holding the existing stock or
+        buy today using the best cash from completed transactions.
+
+        The second transition means either keep the previous cash or sell the
+        held stock today and pay the transaction fee exactly once.
+
+        Both transitions must use the states from before today. The snapshots
+        below prevent a stock bought today from also being sold today and make
+        each iteration represent a valid sequence of transactions.
+
+        Every price is processed once, so the algorithm uses O(N) time and
+        O(1) extra space.
+    */
 
     long long max_net_worth = MIN;
     long long max_net_profit = 0;
@@ -36,13 +63,21 @@ long long solve(const std::vector<int>& prices, const int fee) {
         const long long curr_net_worth = max_net_worth;
         const long long curr_net_profit = max_net_profit;
 
-        // update maximum net worth if we were to buy the stock today. Should we?
+        /*
+            Holding transition:
+            keep the previous stock, or buy today's stock using the best
+            available cash from completed transactions.
+        */
         max_net_worth = std::max(
             curr_net_worth,
             curr_net_profit - price
         );
 
-        // update maximum net profit if we were to sell the stock today. Should we?
+        /*
+            Selling transition:
+            keep the previous cash, or sell the previously held stock today.
+            The fee is charged when the sale is completed.
+        */
         max_net_profit = std::max(
             curr_net_profit,
             curr_net_worth + price - fee
