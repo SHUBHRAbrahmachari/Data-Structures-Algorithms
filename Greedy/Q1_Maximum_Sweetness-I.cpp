@@ -21,6 +21,8 @@
       For a particular day, if a sweet can be made within the available time, then among all
       such valid sweets we should pick the one with maximum sweetness. This is exactly what a
       max-heap helps us do efficiently.
+
+    #O(NlogN + MlogM)
 */
 
 #include <iostream>
