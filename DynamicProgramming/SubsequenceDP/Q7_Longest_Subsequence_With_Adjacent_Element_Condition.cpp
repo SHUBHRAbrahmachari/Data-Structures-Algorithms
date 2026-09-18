@@ -13,7 +13,7 @@
     -10^5 <= A[i] <= 10^5
 
     DP idea:
-    For every value x, we store the best subsequence length that ends with x.
+    For every value x, we store the best subsequence length that ends with either x-1 or x+1.
 
     If we are processing current value ele, then the subsequence ending at ele can be formed by
     extending a subsequence that ended at ele-1 or ele+1.
@@ -60,7 +60,7 @@ int solve(const std::vector<int>& arr) {
             new_len = 1 + max_prev_len;
             memory.emplace(ele, new_len);
         }
-        
+
         else {
             // Case 2: this value was seen before.
             // We may keep the previous best or improve it by extending a valid chain ending at ele-1 / ele+1.
