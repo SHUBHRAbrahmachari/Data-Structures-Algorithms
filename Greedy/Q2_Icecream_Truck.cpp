@@ -43,11 +43,11 @@ int solve(std::vector<int>& prices, int k, int x) {
         // Include the current price in the valid range we are considering.
         curr_cost += prices[right];
 
-        // If the current window is invalid, remove from the left until it becomes valid again.
+        // If the current window is invalid, move the left ahead until it becomes valid again.
         // Invalid means either:
         // 1) total cost > budget
         // 2) max price - min price > allowed difference X
-        while (curr_cost > k || prices[right] - prices[left] > x) {
+        while (curr_cost > k or prices[right] - prices[left] > x) {
             curr_cost -= prices[left];
             left++;
         }
