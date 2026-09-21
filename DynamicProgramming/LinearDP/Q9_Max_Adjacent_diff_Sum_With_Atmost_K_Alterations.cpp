@@ -40,21 +40,9 @@ long long solve(const std::vector<int>& arr, const int k) {
         size,
         std::vector<std::vector<long long>>(
             k+1,
-            std::vector<long long>(
-                2, 0
-            )
+            std::vector<long long>(2)
         )
     );
-
-    /*
-        Now the question becomes what are the base cases?
-    */
-    // case 1: at index 0, we don't alter the element and let it be as it is i.e. no alterations
-    memory[0][0][0] = 0;
-
-    // case 2: at index 0, we alter the element and make it 0 i.e. 1 alteration
-    memory[0][1][1] = 0;
-
 
     /*
         Now we come to the transitions:
@@ -111,9 +99,8 @@ long long solve(const std::vector<int>& arr, const int k) {
             }
 
             // for t == 0 we can't access t-1 right? we need to handle it separately
-            else {
-                memory[i][0][0] = memory[i-1][0][0] + std::abs(arr[i]-arr[i-1]); 
-            }
+            else
+                memory[i][0][0] = memory[i-1][0][0] + std::abs(arr[i]-arr[i-1]);
         }
     }
 
