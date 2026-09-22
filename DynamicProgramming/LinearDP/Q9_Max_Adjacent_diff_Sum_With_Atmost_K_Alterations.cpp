@@ -33,7 +33,7 @@ long long solve(const std::vector<int>& arr, const int k) {
 
         memory[i][t][s]: 
             Maximum possible adjacent difference sum upto index i
-            With EXACTLY total t alterations used up to index i,
+            With atmost t alterations used up to index i,
             With state of A[i] being s (either altered or not) 
     */
     std::vector<std::vector<std::vector<long long>>> memory(
@@ -104,20 +104,10 @@ long long solve(const std::vector<int>& arr, const int k) {
         }
     }
 
-    // since we were asked to generate the answer for ATMOST K transactions, we need to find the maximum for every level
-    long long answer = MIN;
-
-    for (size_t t=0; t<=k; t++) {
-        answer = std::max(
-            answer,
-            std::max(
-                memory[size-1][t][0],
-                memory[size-1][t][1]
-            )
-        );
-    }
-
-    return answer;
+    return std::max(
+        memory[size-1][k][0],
+        memory[size-1][k][1]
+    );
 }
 
 int main() {
