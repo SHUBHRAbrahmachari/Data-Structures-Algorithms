@@ -94,32 +94,32 @@ long long solve(const std::vector<int>& houses, const int k) {
             );
 
             /*
-                                Case 2: rob house i as the t-th robbery.
+                Case 2: rob house i as the t-th robbery.
 
-                                The previous state must be valid before houses[i] is added:
+                The previous state must be valid before houses[i] is added:
 
-                                    - If house i-1 was not robbed, use
-                                        memory_without_robbing[i-1][t-1].
-                                    - If house i-1 was robbed, it would be consecutive with i,
-                                        so instead use memory_with_robbing[i-2][t-1].
+                    - If house i-1 was not robbed, use
+                        memory_without_robbing[i-1][t-1].
+                    - If house i-1 was robbed, it would be consecutive with i,
+                        so instead use memory_with_robbing[i-2][t-1].
 
-                                Both candidates must represent exactly t-1 robberies. A MIN
-                                candidate is impossible and must not participate in the max or
-                                in the addition of houses[i].
+                Both candidates must represent exactly t-1 robberies. A MIN
+                candidate is impossible and must not participate in the max or
+                in the addition of houses[i].
             */
             long long res = std::max(
                 (i > 0 and memory_without_robbing[i-1][t-1] != MIN ? memory_without_robbing[i-1][t-1] : MIN),
                 (i > 1 and memory_with_robbing[i-2][t-1] != MIN ? memory_with_robbing[i-2][t-1] : MIN)
             );
 
-                // Never create a reachable state from an unreachable predecessor.
+            // Never create a reachable state from an unreachable predecessor.
             if (res != MIN)
                 memory_with_robbing[i][t] = res + houses[i];
         }
     }
 
-            // Both final states must contain exactly k robberies. No smaller count is
-            // acceptable because this problem requires exactly K thefts.
+    // Both final states must contain exactly k robberies. No smaller count is
+    // acceptable because this problem requires exactly K thefts.
     return std::max(
         memory_with_robbing[size-1][k],
         memory_without_robbing[size-1][k]
