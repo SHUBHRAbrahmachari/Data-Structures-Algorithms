@@ -80,21 +80,11 @@ long long solve(const std::vector<int>& houses, const int k) {
         }
     }
 
-    // Check every allowed robbery limit. This also makes the at-most-K intent
-    // explicit at the point where the result is selected.
-    long long maximum_wealth = 0;
 
-    for (int t=1; t<=k; t++) {
-        maximum_wealth = std::max(
-            maximum_wealth,
-            std::max(
-                memory_with_robbing[size-1][t],
-                memory_without_robbing[size-1][t]
-            )
-        );
-    }
-
-    return maximum_wealth;
+    return std::max(
+        memory_with_robbing[size-1][k],
+        memory_without_robbing[size-1][k]
+    );
 }
 
 int main() {
