@@ -22,7 +22,7 @@ long long solve(const std::vector<int>& weights, const std::vector<int>& penalti
     if (size == 1)
         return std::max(
             weights[0],
-            penalties[0]
+            -penalties[0]
         );
 
     /*
