@@ -68,6 +68,9 @@ long long solve_tabulation(
 ) {
     const int size = s.size();
 
+    // for all energy, at index=size distance has to be zero
+
+    // next DP represents index+1, curr_dp represents curr_index
     std::vector<long long> next_dp(energy+1), curr_dp(energy+1);
 
     // just reversing the parameter directions
