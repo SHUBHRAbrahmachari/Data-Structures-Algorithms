@@ -33,84 +33,82 @@ long long solve(const std::vector<int>& t1, const std::vector<int>& t2, const st
                 t2[0], t3[0]
             )
         );
-        
+
     /*
-        Let us define our DP state:
+        Let us define our DP states now!
 
-            memory[i][0]: maximum possible earnable points upto day i where we sit idle at day i
-            memory[i][t]: maximum possible earnable points upto day i where we perform task-t at day i (t = {1, 2, 3})
+        memory_idle[i]: maximum collectable points upto day i when we are doing no task at day i
+        memory_t1[i]: maximum collectable points upto day i when we are doing task 1 at day i
+        memory_t2[i]: maximum collectable points upto day i when we are doing task 2 at day i
+        memory_t3[i]: maximum collectable points upto day i when we are doing task 3 at day i
     */
-    std::vector<std::vector<long long>> memory(
-        size,
-        std::vector<long long>(
-            4, -1
-        )
-    );
+    std::vector<long long> memory_idle(size);
+    std::vector<long long> memory_t1(size);
+    std::vector<long long> memory_t2(size);
+    std::vector<long long> memory_t3(size);
 
-    // at the end of day 0, obviously these are the results
-    memory[0][0] = 0;
-    memory[0][1] = t1[0];
-    memory[0][2] = t2[0];
-    memory[0][3] = t3[0];
+    // initiating the base cases
+    memory_idle[0] = 0;
+    memory_t1[0] = t1[0];
+    memory_t2[0] = t2[0];
+    memory_t3[0] = t3[0];
 
     for (int i=1; i<size; i++) {
-        // case 1: i decide to sit idle today
-        memory[i][0] = std::max(
+        // no restriction on resting for any day
+        memory_idle[i] = std::max(
             std::max(
-                memory[i-1][0],     // i was also sitting idle yesterday
-                memory[i-1][1]      // i performed task-1 yesterday
+                memory_idle[i-1],
+                memory_t1[i-1]
             ),
 
             std::max(
-                memory[i-1][2],     // i performed task-2 yesterday
-                memory[i-1][3]      // i performed task-3 yesterday
+                memory_t2[i-1],
+                memory_t3[i-1]
             )
         );
 
-        // case 2: i decided to perform task-1 today
-        memory[i][1] = std::max(
+        memory_t1[i] = std::max(
             std::max(
-                memory[i-1][0],     // i was also sitting idle yesterday
-                memory[i-1][1]      // i performed task-1 yesterday
+                memory_idle[i-1],
+                memory_t1[i-1]                              // i could've done task-1 the previous day
             ),
 
             std::max(
-                memory[i-1][2],     // i performed task-2 yesterday
-                memory[i-1][3]      // i performed task-3 yesterday
+                memory_t2[i-1],                             // i could have also done task-2 the previous day
+                (i > 1 ? memory_t3[i-2] : 0)                // but i couldn't do task-3 the previous day
             )
-        ) + t1[i];      // collect the point for doing task-1
+        ) + t1[i];
 
-        // case 3: i decided to perform task-2 today
-        memory[i][2] = std::max(
+        memory_t2[i] = std::max(
             std::max(
-                memory[i-1][0],     // i was sitting idle yesterday
-                memory[i-1][1]      // i had done task-1 yesterday
+                memory_idle[i-1],
+                memory_t1[i-1]                              // i could surely do task 1 the previous day
             ),
+            
+            (i > 1 ? std::max(memory_t2[i-2], memory_t3[i-2]) : 0)      // i could not do either task-2 or task-3 the previous day
+        ) + t2[i];
 
-            // since i cannot precede task-2 or task-3 yesterday just because i am attempting task-2 today. I need to go back to day before yesterday
-            (i > 1?  
-                std::max(
-                    memory[i-2][2],     // i performed task-2 day before yesterday
-                    memory[i-2][3]      // i performed task-3 day before yesterday
-                ) : 0LL)
-        ) + t2[i];      // collect the point for doing task-2
-
-        // case 4: i decided to perform task-3 today
-        memory[i][3] = std::max(
-            memory[i-1][0],     // i was sitting idle yesterday
-            (i > 1 ? 
-                std::max(
-                    memory[i-2][1],     // i performed task-1 day before yesterday
-                    std::max(
-                        memory[i-2][2],     // i performed task-2 day before yesterday
-                        memory[i-2][3]      // i performed task-3 day before yesterday
-                    )
-                ) : 0LL
-            )
-        ) + t3[i];      // collect the point for doing task-3
+        memory_t3[i] = std::max(
+            std::max(
+                memory_idle[i-1],
+                memory_t1[i-1]                              // i could do task-1 the previous day
+            ),
+            
+            (i > 1 ? std::max(memory_t2[i-2], memory_t3[i-2]) : 0)      // but i could not do either task-2 or task-3 the previous day
+        ) + t3[i];   
     }
 
-    return *std::max_element(memory[size-1].begin(), memory[size-1].end());
+    return std::max(
+        std::max(
+            memory_idle[size-1],
+            memory_t1[size-1]
+        ),
+
+        std::max(
+            memory_t2[size-1],
+            memory_t3[size-1]
+        )
+    );
 }
 
 int main() {
