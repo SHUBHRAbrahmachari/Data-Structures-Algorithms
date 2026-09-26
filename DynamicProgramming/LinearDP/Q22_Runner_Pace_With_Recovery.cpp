@@ -29,25 +29,25 @@ long long solve(
     const int size = s.size();
 
     /*
-        What is going to be our DP state?
-
-        memory[i][e]: with remaining energy e, what is the maximum distance the runner could cover upto i-th minute?
+        energy is both the starting energy and the maximum energy allowed.
+        memory[i][e] is the maximum distance after minute i with e energy;
+        -1 means that this energy state is unreachable.
     */
     std::vector<std::vector<long long>> memory(
         size,
         std::vector<long long>(energy+1, -1)
     );
 
-    // upto 0-th minute if we're at same energy, we must have rested that minute
+    // Resting at the first minute leaves energy at the cap and adds no distance.
     memory[0][energy] = 0;
 
-    // in case jogging and sprinting requires same energy at 0-th minute
+    // If both activities cost the same energy, retain the greater distance.
     if (j[0] == s[0] and energy >= j[0])
         memory[0][energy-j[0]] = std::max(
             s_dis, j_dis
         );
     
-    // otherwise we need to set them differently 
+    // Otherwise, sprinting and jogging reach distinct remaining-energy states.
     else {
         memory[0][energy-j[0]] = j_dis;
         memory[0][energy-s[0]] = s_dis;
@@ -55,33 +55,33 @@ long long solve(
 
     for (int i=1; i<size; i++) {
         for (int e=energy; e>=0; e--) {
-            // we just need to think, what were the ways that we could reach at this energy level!
+            // Compute the best distance for energy e from the previous minute's states.
 
             /*
-                From which energy levels can we reach energy level e by resting?
-                Any valid energy state starting from e >= r[i] right?
+                A rest gains r[i] energy, capped at energy. Below the cap, only
+                predecessor e-r[i] can reach e; at the cap, any predecessor
+                from energy-r[i] through energy reaches the same final energy.
             */
             long long option1 = -1;
             if (e >= r[i]) {
-                for (int start = e-r[i]; start <= std::min(e, energy); start++)
-                    option1 = std::max(
-                        option1,
-                        memory[i-1][start]
-                    );
+                // Excess recovery is discarded, so consider all predecessors that cap at energy.
+                if (e == energy)
+                    for (int start=e-r[i]; start<=energy; start++)
+                        option1 = std::max(
+                            option1,
+                            memory[i-1][start]
+                        );
+
+                else
+                    option1 = memory[i-1][e-r[i]];
             }
 
-            /*
-                From which energy levels can we reach energy level e by jogging?
-                We must have been in energy level e+j[i] to cut j[i] energy right? that means e+j[i] <= energy
-            */
+            // Jogging spends j[i] energy, so its predecessor has e+j[i] energy.
             long long option2 = -1;
             if (e + j[i] <= energy and memory[i-1][e+j[i]] != -1)
                 option2 = memory[i-1][e+j[i]] + j_dis;
 
-            /*
-                From which energy levels can we reach energy level e by sprinting?
-                We must have been in energy level e+s[i] to cut s[i] energy right? that means e+s[i] <= energy
-            */
+            // Sprinting spends s[i] energy, so its predecessor has e+s[i] energy.
             long long option3 = -1;
             if (e + s[i] <= energy and memory[i-1][e+s[i]] != -1)
                 option3 = memory[i-1][e+s[i]] + s_dis;
@@ -93,6 +93,7 @@ long long solve(
         }
     }
 
+    // The runner may finish with any reachable energy level.
     return *std::max_element(memory[size-1].begin(), memory[size-1].end());
 }
 
