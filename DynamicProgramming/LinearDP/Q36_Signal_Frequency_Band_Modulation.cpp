@@ -29,7 +29,7 @@ long long solve(const std::vector<int>& b1, const std::vector<int>& b2, int s, i
     */
     long long curr_memory_b1 = b1[0], next_memory_b1;
     std::vector<long long> curr_memory_b2(k+1, b2[0]), next_memory_b2(k+1);
-    curr_memory_b2[0] = b1[0] + s; // because when we call it from next_memory_b2[] we must consider the penalt right?
+    curr_memory_b2[0] = b1[0] + s; // because when we call it from next_memory_b2[1] we must consider the penalty right?
 
     for (int i=1; i<size; i++) {
         // since B1 does not have necessary restriction, we can simply update that per day basis
