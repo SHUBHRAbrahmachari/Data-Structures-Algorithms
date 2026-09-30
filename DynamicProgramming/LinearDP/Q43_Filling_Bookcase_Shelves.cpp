@@ -39,7 +39,7 @@ long long solve(const std::vector<int>& h, const std::vector<int>& w, const int 
         long long max_height = -1;
         long long best_option = MAX;
 
-        for (int start=i; ; start++) {
+        for (int start=i; start<size; start++) {
             wc += w[start];
 
             if (wc > ws)
