@@ -25,14 +25,16 @@ long long solve(int x, int s, int m, int l, int cs, int cm, int cl) {
             memory[a]: minimum cost to reach pizza size a
     */
     std::vector<long long> memory(x+1, MAX);
+    long long option1, option2, option3;
 
     // base case initialization
     memory[0] = 0;
 
     for (int a=1; a<=x; a++) {
+        option1 = option2 = option3 = MAX;
+
         // since x is the upper range we have to handle it specially!
         if (a == x) {
-            long long option1 = MAX;
             for (int c=std::max(0, x-s); c<x; c++) {
                 if (memory[c] != MAX)
                     option1 = std::min(
@@ -41,7 +43,6 @@ long long solve(int x, int s, int m, int l, int cs, int cm, int cl) {
                     );
             }
 
-            long long option2 = MAX;
             for (int c=std::max(0, x-m); c<x; c++) {
                 if (memory[c] != MAX)
                     option2 = std::min(
@@ -50,7 +51,6 @@ long long solve(int x, int s, int m, int l, int cs, int cm, int cl) {
                     );
             }
 
-            long long option3 = MAX;
             for (int c=std::max(0, x-l); c<x; c++) {
                 if (memory[c] != MAX)
                     option3 = std::min(
@@ -58,35 +58,26 @@ long long solve(int x, int s, int m, int l, int cs, int cm, int cl) {
                         memory[c] + cl
                     );
             }
-
-            // set the minimum cost to reach size a
-            memory[a] = std::min(
-                option1, std::min(option2, option3)
-            );
-
         }
 
         else {
             // how can we reach at size a by buying small size pizza?
-            long long option1 = MAX;
             if (a >= s and memory[a-s] != MAX)
                 option1 = memory[a-s] + cs;
 
             // how can you reach at a size a by buying medium size pizza?
-            long long option2 = MAX;
             if (a >= m and memory[a-m] != MAX)
                 option2 = memory[a-m] + cm;
 
             // how can you reach at at size a by buying large size pizza?
-            long long option3 = MAX;
             if (a >= l and memory[a-l] != MAX)
                 option3 = memory[a-l] + cl;
-
-            // set the minimum cost to reach size a
-            memory[a] = std::min(
-                option1, std::min(option2, option3)
-            );
         }
+
+        // set the minimum cost to reach size a
+        memory[a] = std::min(
+            option1, std::min(option2, option3)
+        );
     }
 
     return memory[x];
