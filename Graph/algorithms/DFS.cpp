@@ -25,7 +25,7 @@ void solve_dfs_preorder(
         int adj_node = edge.get_destination();
 
         if (not visited[adj_node])
-            solve_dfs_preorder(edge.get_destination(), adj_list, visited, ans);
+            solve_dfs_preorder(adj_node, adj_list, visited, ans);
     }
 }
 
