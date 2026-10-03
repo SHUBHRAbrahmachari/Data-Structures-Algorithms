@@ -31,6 +31,20 @@ class DisjointSet {
         }
 
         /*
+            count_components() method figures out how many components are actually there!
+            How do we calculate that! Simply the number number nodes who are parents to themselves.
+        */
+        int count_components() {
+            int comps = 0;
+            for (int node=0; node<this->size; node++) {
+                if (node == this->parents[node])
+                    comps++;
+            }
+
+            return comps;
+        }
+
+        /*
             Method find_parent() helps you to find the ultimate parent of any given node in the graph at a point.
             If node index is negative or beyond maximum node number, it throws OUT_OF_RANGE error.
         */
