@@ -38,7 +38,56 @@ class DirectedGraph {
         }
 };
 
-void show_adjacency_list(const std::vector<std::vector<Edge>>& adj_list, bool weighted=false) {
+
+std::vector<std::vector<Edge>> unweighted_graph_init() {
+    int v;
+    std::cout << "\nEnter the number of nodes you want : ";
+    std::cin >> v;
+
+    int m;
+    std::cout << "\nEnter the number of edges you want : ";
+    std::cin >> m;
+
+    bool directed;
+    std::cout << "\nDo you want your graph to be directed? (0/1) : ";
+    std::cin >> directed;
+
+    std::vector<std::vector<int>> edges(m, std::vector<int>(2));
+    std::cout << "\nKeep entering the edges : \n\n";
+    for (int i=0; i<m; i++)
+        std::cin >> edges.at(i).at(0) >> edges.at(i).at(1);
+
+    if (directed)
+        return DirectedGraph::init(v, edges, false);
+    else
+        return UndirectedGraph::init(v, edges, false);
+}
+
+std::vector<std::vector<Edge>> weighted_graph_init() {
+    int v;
+    std::cout << "\nEnter the number of nodes you want : ";
+    std::cin >> v;
+
+    int m;
+    std::cout << "\nEnter the number of edges you want : ";
+    std::cin >> m;
+
+    bool directed;
+    std::cout << "\nDo you want your graph to be directed? (0/1) : ";
+    std::cin >> directed;
+
+    std::vector<std::vector<int>> edges(m, std::vector<int>(3));
+    std::cout << "\nKeep entering the edges : \n\n";
+    for (int i=0; i<m; i++)
+        std::cin >> edges.at(i).at(0) >> edges.at(i).at(1) >> edges.at(i).at(2);
+
+    if (directed)
+        return DirectedGraph::init(v, edges, true);
+    else
+        return UndirectedGraph::init(v, edges, true);
+}
+
+void show_adjacency_list(const std::vector<std::vector<Edge>>& adj_list) {
     std::cout << std::endl;
     int size = adj_list.size();
 
@@ -46,10 +95,8 @@ void show_adjacency_list(const std::vector<std::vector<Edge>>& adj_list, bool we
         std::cout << "\t\t\t\t\t\t\t\t\t";
         std::cout << s << " : ";
         for (auto edge : adj_list.at(s))
-            if (weighted)
-                std::cout << "(" << edge.get_destination() << ", " << edge.get_weight() << ") ";
-            else
-                std::cout << edge.get_destination() << " ";
+            std::cout << "(" << edge.get_destination() << ", " << edge.get_weight() << ") ";
+
         std::cout << std::endl;
     }
 
