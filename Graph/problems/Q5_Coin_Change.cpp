@@ -23,7 +23,7 @@ int solve(const std::vector<int>& coins, const int amount) {
 
     // initialize the BFS
     que.emplace(0);
-    vis[0] = 0;
+    vis[0] = true;
 
     // minimum count o coins required
     int count = 0;
